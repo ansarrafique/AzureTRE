@@ -43,9 +43,7 @@ COPY ./vmss_porter/config.yaml ${PORTER_HOME_V1}/
 ENV PYTHONPATH=.
 
 COPY ./vmss_porter/requirements.txt /tmp/
-#RUN pip3 --no-cache-dir install -r /tmp/requirements.txt
-RUN pip3 install --no-cache-dir --upgrade "setuptools<81.0.0" && \
-    pip3 --no-cache-dir install -r /tmp/requirements.txt
+RUN pip3 --no-cache-dir install -r /tmp/requirements.txt
 
 COPY . /app
 
