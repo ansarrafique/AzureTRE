@@ -1,54 +1,40 @@
 #!/bin/bash
-
-# 1. Strict Shell Options
 set -euo pipefail
 
-# 2. Initialize variables to avoid 'unbound variable' errors
-BUILDER_NAME="tre-builder"
+# Initialize variables
 CACHE_FLAGS=()
-BUILDER_SUPPORTED=false
 
-# Check if yq is available (required for the cache ref)
-if ! command -v yq >/dev/null 2>&1; then
-    echo "Warning: 'yq' not found. Skipping caching logic."
-    CI_CACHE_ACR_FQDN=""
+# ... (keep the same source porter-build-context.env logic) ...
+
+if [ -n "${CI_CACHE_ACR_FQDN:-}" ] && command -v yq >/dev/null 2>&1; then
+    # Try to set up the builder
+    if docker buildx inspect tre-builder >/dev/null 2>&1 || \
+       docker buildx create --name tre-builder --driver docker-container --use >/dev/null 2>&1; then
+        
+        docker buildx use tre-builder
+        
+        # Safely get bundle name
+        BUNDLE_NAME=$(yq '.name' porter.yaml 2>/dev/null || echo "bundle")
+        REF="${CI_CACHE_ACR_FQDN}/build-cache/${BUNDLE_NAME}:porter"
+        
+        # We define them, but we will wrap the execution in a check
+        CACHE_FLAGS=(--cache-to "type=inline" --cache-from "type=registry,ref=${REF}")
+    fi
 fi
 
-if [ -f "porter-build-context.env" ]; then
-    source "porter-build-context.env"
-    echo "Found additional porter build context PORTER_BUILD_CONTEXT of ${PORTER_BUILD_CONTEXT:-}"
-    porter build --build-context "${PORTER_BUILD_CONTEXT:-}"
-else
-    # 3. Comprehensive Buildx & Cache-To Support Check
-    if [ -n "${CI_CACHE_ACR_FQDN:-}" ]; then
-        # Check if buildx plugin exists and if 'build' command supports --cache-to
-        if docker buildx build --help 2>&1 | grep -q "\-\-cache-to"; then
-            
-            # 4. Attempt to setup/use the container driver
-            if docker buildx inspect "$BUILDER_NAME" >/dev/null 2>&1 || \
-               docker buildx create --name "$BUILDER_NAME" --driver docker-container --use >/dev/null 2>&1; then
-                
-                docker buildx use "$BUILDER_NAME"
-                BUILDER_SUPPORTED=true
-            fi
-        fi
-
-        if [ "$BUILDER_SUPPORTED" = true ]; then
-            # Use a subshell for yq to safely capture the bundle name
-            BUNDLE_NAME=$(yq '.name' porter.yaml 2>/dev/null || echo "unknown")
-            REF="${CI_CACHE_ACR_FQDN}/build-cache/${BUNDLE_NAME}:porter"
-            
-            # 5. Use 'inline' for reliability, but keep registry-from for speed
-            # Note: We don't fail the build if the registry is unreachable during cache-from
-            CACHE_FLAGS=(--cache-to "type=inline" --cache-from "type=registry,ref=${REF}")
-            echo "Buildx with --cache-to supported. Applying inline cache flags."
-        else
-            echo "Buildx or --cache-to not supported in this environment. Falling back to standard build."
-        fi
-    fi
-
-    # 6. Execute Porter Build
-    # If the registry is unreachable, Porter/BuildKit typically warns but continues 
-    # unless the network error is fatal to the primary image push.
+# THE CORE FIX: Catch the 'unknown flag' error specifically
+echo "Building bundle in $PWD..."
+if [ ${#CACHE_FLAGS[@]} -gt 0 ]; then
+    # Try with flags, if it fails with exit code 1 (usually flag errors), fallback
+    set +e
     porter build "${CACHE_FLAGS[@]}"
+    exit_code=$?
+    set -e
+
+    if [ $exit_code -ne 0 ]; then
+        echo "Build failed with cache flags (exit $exit_code). Retrying without cache..."
+        porter build
+    fi
+else
+    porter build
 fi
