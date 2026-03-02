@@ -24,7 +24,8 @@ sudo apt install -y xfce4 xfce4-goodies xorg dbus-x11 x11-xserver-utils
 echo /usr/sbin/gdm3 > /etc/X11/default-display-manager
 
 ## Python 3.8 and Jupyter
-sudo apt install -y jupyter-notebook microsoft-edge-dev
+#sudo apt install -y jupyter-notebook microsoft-edge-dev
+sudo apt install -y jupyter-notebook
 
 ## VS Code
 echo "init_vm.sh: VS Code"
@@ -163,7 +164,7 @@ sudo echo -e "local({\n    r <- getOption(\"repos\")\n    r[\"Nexus\"] <- \"${NE
 sudo sed -i -e 's/Terminal=true/Terminal=false/g' /usr/share/applications/jupyter-notebook.desktop
 
 # Default Browser
-sudo update-alternatives --config x-www-browser
+# sudo update-alternatives --config x-www-browser
 
 # Prevent screen timeout
 echo "init_vm.sh: Preventing Timeout"
