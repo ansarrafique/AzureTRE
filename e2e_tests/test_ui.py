@@ -14,4 +14,4 @@ async def test_ui() -> None:
     async with AsyncClient(verify=False) as client:
         response = await client.get(endpoint)
         assert response.status_code == 200
-        assert "<title>Azure TRE</title>" in response.text
+        assert "<title>Oxford Trusted Research Environment</title>" in response.text
