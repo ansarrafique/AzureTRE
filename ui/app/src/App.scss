@@ -370,3 +370,14 @@ input[readonly] {
 .field span.ms-Checkbox-text {
   font-style: normal;
 }
+
+/* Force link-style actions (e.g. Show details, Refresh) to Oxford blue */
+.ms-Link,
+.ms-Button--commandBar .ms-Button-label {
+  color: #002147 !important;
+}
+
+.ms-Link:hover,
+.ms-Button--commandBar:hover .ms-Button-label {
+  color: #001633 !important;
+}
