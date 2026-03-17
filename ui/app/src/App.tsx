@@ -68,12 +68,8 @@ export const App: React.FunctionComponent = () => {
 
   const apiCall = useAuthApiCall();
 
-  // set the app roles (skipped when mockMode is true)
+  // set the app roles 
   useEffect(() => {
-    if ((config as any).mockMode === true) {
-      setAppRoles(["TREAdmin"]);
-      return;
-    }
 
     const setAppRolesOnLoad = async () => {
       await apiCall(
