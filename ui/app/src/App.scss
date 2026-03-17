@@ -100,12 +100,12 @@ ul.tre-notifications-steps-list li {
 }
 
 .service-name-line1 {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 500;
 }
 
 .service-name-line2 {
-  font-size: 1.25rem;
+  font-size: 1.05rem;
   font-weight: 600;
 }
 
@@ -380,4 +380,8 @@ input[readonly] {
 .ms-Link:hover,
 .ms-Button--commandBar:hover .ms-Button-label {
   color: #001633 !important;
+}
+
+.footer-migration-notice {
+  margin-top: 0.5rem;
 }
