@@ -5,6 +5,8 @@ import {
   MessageBar,
   MessageBarType,
   Stack,
+  ThemeProvider,
+  createTheme,
 } from "@fluentui/react";
 import "./App.scss";
 import { TopNav } from "./components/shared/TopNav";
@@ -28,6 +30,25 @@ import { CostResource } from "./models/costs";
 import { CostsContext } from "./contexts/CostsContext";
 import { LoadingState } from "./models/loadingState";
 import config from "./config.json";
+
+const oxfordTheme = createTheme({
+  palette: {
+    themePrimary: "#002147",
+    themeDark: "#001633",
+    themeDarker: "#000d20",
+    themeDarkAlt: "#002c63",
+    themeLight: "#33527a",
+    themeLighter: "#c3cfdf",
+    themeLighterAlt: "#f4f6f9",
+  },
+  semanticColors: {
+    link: "#002147",
+    linkHovered: "#001633",
+    buttonText: "#002147",
+    buttonBorder: "#002147",
+    buttonTextHovered: "#001633",
+  },
+});
 
 export const App: React.FunctionComponent = () => {
   const [appRoles, setAppRoles] = useState([] as Array<string>);
@@ -169,7 +190,7 @@ export const App: React.FunctionComponent = () => {
     );
 
   return (
-    <>
+    <ThemeProvider theme={oxfordTheme}>
       <Routes>
         <Route path="*" element={appContent} />
         <Route
@@ -182,16 +203,17 @@ export const App: React.FunctionComponent = () => {
               >
                 <h2>You are logged out.</h2>
                 <p>
-                  You are now logged out of the Azure TRE portal. Please ensure that you
-                  also log out and close all browser windows for other TRE services,
-                  such as virtual machines, that you might have open.
+                  You are now logged out of the Azure TRE portal. Please ensure
+                  that you also log out and close all browser windows for other
+                  TRE services, such as virtual machines, that you might have
+                  open.
                 </p>
               </MessageBar>
             </div>
           }
         />
       </Routes>
-    </>
+    </ThemeProvider>
   );
 };
 
