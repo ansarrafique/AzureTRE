@@ -23,9 +23,9 @@ export const TopNav: React.FunctionComponent = () => {
               <img
                 src="/images/avatar.png"
                 alt="Logo"
-                width={50}
-                height={50}
-                style={{ marginRight: "12px" }}
+                width={40}
+                height={40}
+                style={{ marginRight: "10px" }}
               />
               <span className="service-name">
                 <span className="service-name-line1">University of Oxford</span>
@@ -56,8 +56,8 @@ const contentClass = mergeStyles([
   {
     backgroundColor: "#002147",
     color: "#ffffff",
-    padding: "0 32px",
-    height: 70,
+    padding: "0 24px",
+    height: 56,
     display: "flex",
     alignItems: "center",
     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",

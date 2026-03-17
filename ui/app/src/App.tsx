@@ -143,7 +143,7 @@ export const App: React.FunctionComponent = () => {
           </CostsContext.Provider>
         </GenericErrorBoundary>
       </Stack.Item>
-      <Stack.Item grow>
+      <Stack.Item>
         <Footer />
       </Stack.Item>
     </Stack>
