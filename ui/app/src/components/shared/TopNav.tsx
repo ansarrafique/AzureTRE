@@ -21,15 +21,24 @@ export const TopNav: React.FunctionComponent = () => {
               }}
             >
               <img
-                src="/images/avatar.png"
+                src="/images/oxford-uni-logo.png"
                 alt="Logo"
                 width={40}
                 height={40}
                 style={{ marginRight: "10px" }}
               />
-              <span className="service-name">
-                <span className="service-name-line1">University of Oxford</span>
-                <span className="service-name-line2">
+              <span
+                style={{
+                  display: "inline-flex",
+                  flexDirection: "column",
+                  lineHeight: 1.1,
+                  color: "#ffffff",
+                }}
+              >
+                <span style={{ fontSize: "0.8rem", fontWeight: 500 }}>
+                  University of Oxford
+                </span>
+                <span style={{ fontSize: "1.05rem", fontWeight: 600 }}>
                   Trusted Research Environment
                 </span>
               </span>
