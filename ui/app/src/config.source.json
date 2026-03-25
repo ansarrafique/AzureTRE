@@ -10,5 +10,5 @@
     "activeDirectoryUri": "",
     "userManagementEnabled": false,
     "uiSiteName": "Azure TRE",
-    "uiFooterText": "Azure Trusted Research Environment"
+    "uiFooterText": "© {year} University of Oxford. Research Services, 5 Worcester Street, Oxford, OX1 2BX"
 }
