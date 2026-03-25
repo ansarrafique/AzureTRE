@@ -9,7 +9,8 @@ export * from "@fluentui/react/lib/index.bundle";
 const oxfordTheme = createTheme({
   palette: {
     themePrimary: "#002147",
-    themeDark: "#001633",
+    // Use official Oxford blue for chrome (header/footer); #001633 was visibly different from logo / brand bar
+    themeDark: "#002147",
     themeDarker: "#000d20",
     themeDarkAlt: "#002c63",
     themeLight: "#33527a",

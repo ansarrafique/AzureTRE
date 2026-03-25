@@ -10,5 +10,6 @@
     "activeDirectoryUri": "",
     "userManagementEnabled": false,
     "uiSiteName": "Azure TRE",
-    "uiFooterText": "© {year} University of Oxford. Research Services, 5 Worcester Street, Oxford, OX1 2BX"
+    "uiFooterText": "© {year} University of Oxford. Research Services, 5 Worcester Street, Oxford, OX1 2BX",
+    "uiLogoutBody": "You are now logged out of the Azure TRE portal. Please ensure that you also log out and close all browser windows for other TRE services, such as virtual machines, that you might have open."
 }
