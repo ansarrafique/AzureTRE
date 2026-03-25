@@ -7,7 +7,6 @@ import { MsalProvider } from "@azure/msal-react";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 import { createRoot } from "react-dom/client";
-import config from "./config.json";
 
 // Inject some global styles
 mergeStyles({
@@ -19,10 +18,6 @@ mergeStyles({
 });
 
 const root = createRoot(document.getElementById("root") as HTMLElement);
-
-if (config?.uiSiteName) {
-  document.title = config.uiSiteName;
-}
 
 root.render(
   <MsalProvider instance={pca}>

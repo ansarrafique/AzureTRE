@@ -68,9 +68,8 @@ export const App: React.FunctionComponent = () => {
 
   const apiCall = useAuthApiCall();
 
-  // set the app roles 
+  // set the app roles
   useEffect(() => {
-
     const setAppRolesOnLoad = async () => {
       await apiCall(
         ApiEndpoint.Workspaces,
