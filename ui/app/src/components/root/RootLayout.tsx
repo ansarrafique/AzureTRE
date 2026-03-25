@@ -21,14 +21,12 @@ import { APIError } from "../../models/exceptions";
 import { ExceptionLayout } from "../shared/ExceptionLayout";
 import { AppRolesContext } from "../../contexts/AppRolesContext";
 import { CostsContext } from "../../contexts/CostsContext";
-import config from '../../config.json';
+import config from "../../config.json";
 
 export const RootLayout: React.FunctionComponent = () => {
   const [workspaces, setWorkspaces] = useState([] as Array<Workspace>);
-  const [loadingState, setLoadingState] = useState<LoadingState>(
-    LoadingState.Loading,
-  );
-  const [loadingCostState, setLoadingCostState] = useState<LoadingState>(
+  const [loadingState, setLoadingState] = useState(LoadingState.Loading);
+  const [loadingCostState, setLoadingCostState] = useState(
     LoadingState.Loading,
   );
   const [apiError, setApiError] = useState({} as APIError);
@@ -38,7 +36,6 @@ export const RootLayout: React.FunctionComponent = () => {
   const costsWriteCtx = useRef(useContext(CostsContext));
 
   useEffect(() => {
-
     const getWorkspaces = async () => {
       try {
         const r = await apiCall(
@@ -61,7 +58,6 @@ export const RootLayout: React.FunctionComponent = () => {
   }, [apiCall]);
 
   useEffect(() => {
-
     const getCosts = async () => {
       try {
         if (appRolesCtx.roles.includes(RoleName.TREAdmin)) {
