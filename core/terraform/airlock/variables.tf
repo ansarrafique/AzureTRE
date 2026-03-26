@@ -41,7 +41,7 @@ variable "acr_id" {
 
 variable "airlock_app_service_plan_sku" {
   type    = string
-  default = "P1v3"
+  default = "P1v4"
 }
 
 variable "airlock_processor_subnet_id" {

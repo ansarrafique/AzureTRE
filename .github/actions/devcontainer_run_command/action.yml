@@ -296,9 +296,9 @@ runs:
           -e TF_VAR_enable_airlock_malware_scanning=${{ inputs.ENABLE_AIRLOCK_MALWARE_SCANNING }} \
           -e CI_CACHE_ACR_NAME="${{ inputs.CI_CACHE_ACR_NAME }}" \
           -e TF_VAR_core_app_service_plan_sku="${{ (inputs.CORE_APP_SERVICE_PLAN_SKU != ''
-            && inputs.CORE_APP_SERVICE_PLAN_SKU) || 'P1v2' }}" \
+            && inputs.CORE_APP_SERVICE_PLAN_SKU) || 'P1v4' }}" \
           -e WORKSPACE_APP_SERVICE_PLAN_SKU="${{ (inputs.WORKSPACE_APP_SERVICE_PLAN_SKU != ''
-            && inputs.WORKSPACE_APP_SERVICE_PLAN_SKU) || 'P1v2' }}" \
+            && inputs.WORKSPACE_APP_SERVICE_PLAN_SKU) || 'P1v4' }}" \
           -e TF_VAR_rp_bundle_values='${{ (toJson(inputs.RP_BUNDLE_VALUES) != '""'
             && inputs.RP_BUNDLE_VALUES) || '{}' }}' \
           -e UI_SITE_NAME="${{ inputs.UI_SITE_NAME }}" \

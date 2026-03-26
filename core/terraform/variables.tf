@@ -39,7 +39,7 @@ variable "api_image_repository" {
 
 variable "core_app_service_plan_sku" {
   type    = string
-  default = "P1v3"
+  default = "P1v4"
 }
 
 variable "resource_processor_vmss_porter_image_repository" {
@@ -120,7 +120,7 @@ variable "resource_processor_type" {
 
 variable "resource_processor_vmss_sku" {
   type        = string
-  default     = "Standard_B2s"
+  default     = "Standard_D2as"
   description = "The SKU of the resource processor VMSS."
 }
 
