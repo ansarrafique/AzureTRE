@@ -229,6 +229,12 @@ variable "logging_level" {
   }
 }
 
+variable "kv_name_override" {
+  type        = string
+  description = "Optional override for the core Key Vault name. Leave empty to use kv-${tre_id}."
+  default     = ""
+}
+
 variable "enable_cmk_encryption" {
   type        = bool
   description = "A boolean indicating if customer managed keys will be used for encryption of supporting resources"

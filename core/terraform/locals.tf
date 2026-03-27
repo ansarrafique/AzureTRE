@@ -60,7 +60,7 @@ locals {
   encryption_identity_name = "id-encryption-${var.tre_id}"
 
   # key vault variables
-  kv_name                          = "kv-${var.tre_id}"
+  kv_name                          = var.kv_name_override != "" ? var.kv_name_override : "kv-${var.tre_id}"
   kv_public_network_access_enabled = true
   kv_network_default_action        = var.private_agent_subnet_id != "" ? "Deny" : "Allow" # Deny if private agent subnet is defined, Allow otherwise for public deployment. This will be changed to "Deny" later in trap kv_remove_network_exception
   kv_network_bypass                = "AzureServices"
