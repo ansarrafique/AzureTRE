@@ -34,8 +34,8 @@ tre:
   core_address_space: 10.1.0.0/22
   tre_address_space: 10.0.0.0/12
 
-  core_app_service_plan_sku: P1v2
-  resource_processor_vmss_sku: Standard_B2s
+  core_app_service_plan_sku: P1v4
+  resource_processor_vmss_sku: Standard_D2as
   enable_swagger: true
   enable_airlock_malware_scanning: true
 
@@ -44,7 +44,7 @@ tre:
   # enable_airlock_email_check: true
 
   # TODO: move to RP default with https://github.com/microsoft/AzureTRE/issues/2948
-  workspace_app_service_plan_sku: P1v2
+  workspace_app_service_plan_sku: P1v4
   # The TRE Web UI is deployed by default.
   # Uncomment the following to disable deployment of the Web UI.
   # deploy_ui: false

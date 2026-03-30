@@ -27,12 +27,13 @@
       "type": "string",
       "title": "App Service Plan SKU",
       "description": "The SKU that will be used when deploying an Azure App Service Plan.",
-      "default": "P1v3",
+      "default": "P1v4",
       "updateable": true,
       "enum": [
         "P0v3",
         "P1v3",
         "P1v2",
+        "P1v4",
         "S1"
       ]
     },

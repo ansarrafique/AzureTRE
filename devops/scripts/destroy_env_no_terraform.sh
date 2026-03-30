@@ -108,7 +108,14 @@ tre_id=${core_tre_rg#"rg-"}
 
 # purge keyvault if possible (makes it possible to reuse the same tre_id later)
 # this has to be done before we delete the resource group since we might not wait for it to complete
-keyvault_name="kv-${tre_id}"
+# Must match core/terraform locals when kv_name_override is set
+if [[ -n "${TF_VAR_kv_name_override:-}" ]]; then
+  keyvault_name="${TF_VAR_kv_name_override}"
+elif [[ -n "${CORE_KV_NAME:-}" ]]; then
+  keyvault_name="${CORE_KV_NAME}"
+else
+  keyvault_name="kv-${tre_id}"
+fi
 keyvault=$(az keyvault show --name "${keyvault_name}" --resource-group "${core_tre_rg}" -o json || echo 0)
 if [ "${keyvault}" != "0" ]; then
   secrets=$(az keyvault secret list --vault-name "${keyvault_name}" -o json | jq -r '.[].id')

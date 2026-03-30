@@ -103,6 +103,16 @@ function get_kv_name() {
     exit 1
   fi
 
+  # Must match core/terraform locals: kv_name_override or default kv-<tre_id>
+  if [[ -n "${TF_VAR_kv_name_override:-}" ]]; then
+    echo "${TF_VAR_kv_name_override}"
+    return
+  fi
+  if [[ -n "${CORE_KV_NAME:-}" ]]; then
+    echo "${CORE_KV_NAME}"
+    return
+  fi
+
   echo "kv-${TRE_ID_LOCAL}"
 }
 
