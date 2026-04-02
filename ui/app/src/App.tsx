@@ -27,6 +27,7 @@ import { initializeFileTypeIcons } from "@fluentui/react-file-type-icons";
 import { CostResource } from "./models/costs";
 import { CostsContext } from "./contexts/CostsContext";
 import { LoadingState } from "./models/loadingState";
+import config from "./config.json";
 
 export const App: React.FunctionComponent = () => {
   const [appRoles, setAppRoles] = useState([] as Array<string>);
@@ -66,15 +67,69 @@ export const App: React.FunctionComponent = () => {
 
   useEffect(() => initializeFileTypeIcons(), []);
 
-  return (
-    <>
-      <Routes>
-        <Route
-          path="*"
-          element={
-            <MsalAuthenticationTemplate
-              interactionType={InteractionType.Redirect}
-            >
+  const shell = (
+    <Stack styles={stackStyles} className="tre-root">
+      <Stack.Item grow className="tre-top-nav">
+        <TopNav />
+      </Stack.Item>
+      <Stack.Item grow={100} className="tre-body">
+        <GenericErrorBoundary>
+          <CostsContext.Provider
+            value={{
+              loadingState: costsLoadingState,
+              costs: costs,
+              setCosts: (costs: Array<CostResource>) => {
+                setCosts(costs);
+              },
+              setLoadingState: (loadingState: LoadingState) => {
+                setCostsLoadingState(loadingState);
+              },
+            }}
+          >
+            <Routes>
+              <Route path="*" element={<RootLayout />} />
+              <Route
+                path="/workspaces/:workspaceId//*"
+                element={
+                  <WorkspaceContext.Provider
+                    value={{
+                      roles: workspaceRoles,
+                      setRoles: (roles: Array<string>) => {
+                        setWorkspaceRoles(roles);
+                      },
+                      costs: workspaceCosts,
+                      setCosts: (costs: Array<CostResource>) => {
+                        setWorkspaceCosts(costs);
+                      },
+                      workspace: selectedWorkspace,
+                      setWorkspace: (w: Workspace) => {
+                        setSelectedWorkspace(w);
+                      },
+                      workspaceApplicationIdURI:
+                        selectedWorkspace.properties?.scope_id,
+                    }}
+                  >
+                    <WorkspaceProvider />
+                  </WorkspaceContext.Provider>
+                }
+              />
+            </Routes>
+          </CostsContext.Provider>
+        </GenericErrorBoundary>
+      </Stack.Item>
+      <Stack.Item>
+        <Footer />
+      </Stack.Item>
+    </Stack>
+  );
+
+  const appContent =
+    (config as any).mockMode === true ? (
+      shell
+    ) : (
+      <MsalAuthenticationTemplate
+        interactionType={InteractionType.Redirect}
+      >
               <AppRolesContext.Provider
                 value={{
                   roles: appRoles,
@@ -85,9 +140,7 @@ export const App: React.FunctionComponent = () => {
               >
                 <CreateUpdateResourceContext.Provider
                   value={{
-                    openCreateForm: (
-                      createFormResource: CreateFormResource,
-                    ) => {
+                    openCreateForm: (createFormResource: CreateFormResource) => {
                       setCreateFormResource(createFormResource);
                       setCreateFormOpen(true);
                     },
@@ -104,84 +157,30 @@ export const App: React.FunctionComponent = () => {
                     }
                     updateResource={createFormResource.updateResource}
                   />
-                  <Stack styles={stackStyles} className="tre-root">
-                    <Stack.Item grow className="tre-top-nav">
-                      <TopNav />
-                    </Stack.Item>
-                    <Stack.Item grow={100} className="tre-body">
-                      <GenericErrorBoundary>
-                        <CostsContext.Provider
-                          value={{
-                            loadingState: costsLoadingState,
-                            costs: costs,
-                            setCosts: (costs: Array<CostResource>) => {
-                              setCosts(costs);
-                            },
-                            setLoadingState: (loadingState: LoadingState) => {
-                              setCostsLoadingState(loadingState);
-                            },
-                          }}
-                        >
-                          <Routes>
-                            <Route path="*" element={<RootLayout />} />
-                            <Route
-                              path="/workspaces/:workspaceId//*"
-                              element={
-                                <WorkspaceContext.Provider
-                                  value={{
-                                    roles: workspaceRoles,
-                                    setRoles: (roles: Array<string>) => {
-                                      setWorkspaceRoles(roles);
-                                    },
-                                    costs: workspaceCosts,
-                                    setCosts: (costs: Array<CostResource>) => {
-                                      setWorkspaceCosts(costs);
-                                    },
-                                    workspace: selectedWorkspace,
-                                    setWorkspace: (w: Workspace) => {
-                                      setSelectedWorkspace(w);
-                                    },
-                                    workspaceApplicationIdURI:
-                                      selectedWorkspace.properties?.scope_id,
-                                  }}
-                                >
-                                  <WorkspaceProvider />
-                                </WorkspaceContext.Provider>
-                              }
-                            />
-                          </Routes>
-                        </CostsContext.Provider>
-                      </GenericErrorBoundary>
-                    </Stack.Item>
-                    <Stack.Item grow>
-                      <Footer />
-                    </Stack.Item>
-                  </Stack>
+                  {shell}
                 </CreateUpdateResourceContext.Provider>
               </AppRolesContext.Provider>
             </MsalAuthenticationTemplate>
-          }
-        />
-        <Route
-          path="/logout"
-          element={
-            <div className="tre-logout-message">
-              <MessageBar
-                messageBarType={MessageBarType.success}
-                isMultiline={true}
-              >
-                <h2>You are logged out.</h2>
-                <p>
-                  You are now logged out of the Azure TRE portal. Please ensure that you
-                  also log out and close all browser windows for other TRE services,
-                  such as virtual machines, that you might have open.
-                </p>
-              </MessageBar>
-            </div>
-          }
-        />
-      </Routes>
-    </>
+    );
+
+  return (
+    <Routes>
+      <Route path="*" element={appContent} />
+      <Route
+        path="/logout"
+        element={
+          <div className="tre-logout-message">
+            <MessageBar
+              messageBarType={MessageBarType.success}
+              isMultiline={true}
+            >
+              <h2>You are logged out.</h2>
+              <p>{(config as { uiLogoutBody?: string }).uiLogoutBody}</p>
+            </MessageBar>
+          </div>
+        }
+      />
+    </Routes>
   );
 };
 

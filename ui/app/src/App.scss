@@ -27,7 +27,6 @@ code {
 }
 
 .tre-top-nav {
-  box-shadow: 0 1px 2px 0px #033d68;
   z-index: 100;
 }
 
@@ -42,7 +41,7 @@ code {
 
 .tre-notifications-button {
   position: relative;
-  top: 7px;
+  top: 0;
   color: #fff;
 
   i {
@@ -94,8 +93,6 @@ ul.tre-notifications-steps-list li {
 }
 
 .tre-user-menu {
-  margin-top: 2px;
-
   .ms-Persona-primaryText:hover {
     color: #fff;
   }
@@ -105,7 +102,7 @@ ul.tre-notifications-steps-list li {
   }
 
   .ms-Icon {
-    margin-top: 3px;
+    margin-top: 0;
   }
 }
 
@@ -355,4 +352,19 @@ input[readonly] {
 
 .field span.ms-Checkbox-text {
   font-style: normal;
+}
+
+/* Force link-style actions (e.g. Show details, Refresh) to Oxford blue */
+.ms-Link,
+.ms-Button--commandBar .ms-Button-label {
+  color: #002147 !important;
+}
+
+.ms-Link:hover,
+.ms-Button--commandBar:hover .ms-Button-label {
+  color: #001633 !important;
+}
+
+.footer-migration-notice {
+  margin-top: 0.5rem;
 }

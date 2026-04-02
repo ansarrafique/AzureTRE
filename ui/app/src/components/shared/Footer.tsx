@@ -51,11 +51,18 @@ export const Footer: React.FunctionComponent = () => {
   }, [apiCall]);
 
   const uiConfig = config as UIConfig;
+  const year = new Date().getFullYear();
+  const footerText = (uiConfig.uiFooterText ?? "").replaceAll(
+    "{year}",
+    String(year),
+  );
 
   return (
     <div className={contentClass}>
       <Stack horizontal style={{ alignItems: "center" }}>
-        <StackItem grow={1}>{(uiConfig.uiFooterText ?? "") === "" ? "Azure Trusted Research Environment" : uiConfig.uiFooterText}</StackItem>
+        <StackItem grow={1}>
+          {footerText === "" ? "Azure Trusted Research Environment" : footerText}
+        </StackItem>
         <StackItem>
           <IconButton
             styles={iconButtonStyles}
