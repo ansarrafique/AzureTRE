@@ -9,7 +9,7 @@ registry: azuretre
 custom:
   # For information on vm_sizes and image_options, see README.me in the guacamole/user-resources folder
   vm_sizes:
-    "2 CPU | 8GB RAM": Standard_D2s_v5
+    "2 CPU | 8GB RAM": Standard_D2ads_v7
   image_options:
     "Server 2019 Data Science VM":
       source_image_reference:
