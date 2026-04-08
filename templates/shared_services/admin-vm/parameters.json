@@ -69,6 +69,12 @@
       "source": {
         "env": "IMAGE_GALLERY_ID"
       }
+    },
+    {
+      "name": "kv_name_override",
+      "source": {
+        "env": "KV_NAME_OVERRIDE"
+      }
     }
   ]
 }

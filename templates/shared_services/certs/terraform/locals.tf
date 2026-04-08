@@ -1,4 +1,6 @@
 locals {
+  core_key_vault_name = var.kv_name_override != "" ? var.kv_name_override : "kv-${var.tre_id}"
+
   staticweb_storage_name = lower(replace("stwebcerts${var.tre_id}", "-", ""))
 
   staticweb_backend_pool_name = "beap-certs-staticweb"

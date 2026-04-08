@@ -13,6 +13,7 @@ locals {
   rp_bundle_values_all = merge(var.rp_bundle_values, {
     // Add any additional settings like ones from the config.yaml here
     // to make them available for bundles.
+    kv_name_override                       = var.kv_name_override
     enable_cmk_encryption                  = var.enable_cmk_encryption
     key_store_id                           = var.key_store_id
     ui_client_id                           = var.ui_client_id

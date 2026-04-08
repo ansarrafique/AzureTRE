@@ -58,6 +58,12 @@ variable "key_vault_url" {
 variable "key_vault_id" {
   type = string
 }
+
+variable "kv_name_override" {
+  type        = string
+  description = "Optional override for the core Key Vault name; passed to Porter as RP_BUNDLE_kv_name_override for bundle Terraform."
+  default     = ""
+}
 variable "resource_processor_number_processes_per_instance" {
   type = string
 }

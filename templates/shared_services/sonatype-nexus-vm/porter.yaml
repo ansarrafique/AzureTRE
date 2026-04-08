@@ -1,7 +1,7 @@
 ---
 schemaVersion: 1.0.0
 name: tre-shared-service-sonatype-nexus
-version: 3.7.8
+version: 3.7.9
 description: "A Sonatype Nexus shared service"
 dockerfile: Dockerfile.tmpl
 registry: azuretre
@@ -71,6 +71,10 @@ parameters:
     type: boolean
     default: false
     description: "User has accepted the Sonatype Nexus Community Edition EULA"
+  - name: kv_name_override
+    type: string
+    description: "Optional override for the core Key Vault name. Leave empty to use kv-<tre_id>."
+    default: ""
 outputs:
   - name: workspace_vm_allowed_fqdns_list
     type: string
@@ -114,6 +118,7 @@ install:
         mgmt_acr_name: ${ bundle.parameters.mgmt_acr_name }
         mgmt_resource_group_name: ${ bundle.parameters.mgmt_resource_group_name }
         nexus_image_tag: ${ bundle.custom.runtime_image.import.tag }
+        kv_name_override: ${ bundle.parameters.kv_name_override }
       backendConfig:
         use_azuread_auth: "true"
         use_oidc: "true"
@@ -141,6 +146,7 @@ upgrade:
         mgmt_acr_name: ${ bundle.parameters.mgmt_acr_name }
         mgmt_resource_group_name: ${ bundle.parameters.mgmt_resource_group_name }
         nexus_image_tag: ${ bundle.custom.runtime_image.import.tag }
+        kv_name_override: ${ bundle.parameters.kv_name_override }
       backendConfig:
         use_azuread_auth: "true"
         use_oidc: "true"
@@ -168,6 +174,7 @@ uninstall:
         mgmt_acr_name: ${ bundle.parameters.mgmt_acr_name }
         mgmt_resource_group_name: ${ bundle.parameters.mgmt_resource_group_name }
         nexus_image_tag: ${ bundle.custom.runtime_image.import.tag }
+        kv_name_override: ${ bundle.parameters.kv_name_override }
       backendConfig:
         use_azuread_auth: "true"
         use_oidc: "true"

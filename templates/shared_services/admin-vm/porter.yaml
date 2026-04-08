@@ -1,7 +1,7 @@
 ---
 schemaVersion: 1.0.0
 name: tre-shared-service-admin-vm
-version: 0.5.4
+version: 0.5.5
 description: "An admin vm shared service"
 dockerfile: Dockerfile.tmpl
 registry: azuretre
@@ -73,6 +73,10 @@ parameters:
     type: string
     description: Azure resource ID for the compute image gallery to pull images from (if specifying custom images by name)
     default: ""
+  - name: kv_name_override
+    type: string
+    description: "Optional override for the core Key Vault name. Leave empty to use kv-<tre_id>."
+    default: ""
 
 mixins:
   - terraform:
@@ -89,6 +93,7 @@ install:
         key_store_id: ${ bundle.parameters.key_store_id }
         image_gallery_id: ${ bundle.parameters.image_gallery_id }
         image: ${ bundle.parameters.os_image }
+        kv_name_override: ${ bundle.parameters.kv_name_override }
       backendConfig:
         use_azuread_auth: "true"
         use_oidc: "true"
@@ -108,6 +113,7 @@ upgrade:
         key_store_id: ${ bundle.parameters.key_store_id }
         image_gallery_id: ${ bundle.parameters.image_gallery_id }
         image: ${ bundle.parameters.os_image }
+        kv_name_override: ${ bundle.parameters.kv_name_override }
       backendConfig:
         use_azuread_auth: "true"
         use_oidc: "true"
@@ -127,6 +133,7 @@ uninstall:
         key_store_id: ${ bundle.parameters.key_store_id }
         image_gallery_id: ${ bundle.parameters.image_gallery_id }
         image: ${ bundle.parameters.os_image }
+        kv_name_override: ${ bundle.parameters.kv_name_override }
       backendConfig:
         use_azuread_auth: "true"
         use_oidc: "true"

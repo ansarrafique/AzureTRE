@@ -1,7 +1,7 @@
 ---
 schemaVersion: 1.0.0
 name: tre-shared-service-cyclecloud
-version: 0.7.4
+version: 0.7.5
 description: "An Azure TRE Shared Service Template for Azure Cyclecloud"
 registry: azuretre
 dockerfile: Dockerfile.tmpl
@@ -52,6 +52,10 @@ parameters:
   - name: key_store_id
     type: string
     default: ""
+  - name: kv_name_override
+    type: string
+    description: "Optional override for the core Key Vault name. Leave empty to use kv-<tre_id>."
+    default: ""
 
 outputs:
   - name: connection_uri
@@ -81,6 +85,7 @@ install:
         arm_environment: ${ bundle.parameters.arm_environment }
         enable_cmk_encryption: ${ bundle.parameters.enable_cmk_encryption }
         key_store_id: ${ bundle.parameters.key_store_id }
+        kv_name_override: ${ bundle.parameters.kv_name_override }
       backendConfig:
         use_azuread_auth: "true"
         use_oidc: "true"
@@ -101,6 +106,7 @@ upgrade:
         arm_environment: ${ bundle.parameters.arm_environment }
         enable_cmk_encryption: ${ bundle.parameters.enable_cmk_encryption }
         key_store_id: ${ bundle.parameters.key_store_id }
+        kv_name_override: ${ bundle.parameters.kv_name_override }
       backendConfig:
         use_azuread_auth: "true"
         use_oidc: "true"
@@ -121,6 +127,7 @@ uninstall:
         arm_environment: ${ bundle.parameters.arm_environment }
         enable_cmk_encryption: ${ bundle.parameters.enable_cmk_encryption }
         key_store_id: ${ bundle.parameters.key_store_id }
+        kv_name_override: ${ bundle.parameters.kv_name_override }
       backendConfig:
         use_azuread_auth: "true"
         use_oidc: "true"

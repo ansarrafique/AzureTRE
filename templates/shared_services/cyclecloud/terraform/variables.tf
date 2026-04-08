@@ -14,3 +14,9 @@ variable "enable_cmk_encryption" {
 variable "key_store_id" {
   type = string
 }
+
+variable "kv_name_override" {
+  type        = string
+  description = "Optional override for the core Key Vault name. Leave empty to use the default name kv-<tre_id>."
+  default     = ""
+}

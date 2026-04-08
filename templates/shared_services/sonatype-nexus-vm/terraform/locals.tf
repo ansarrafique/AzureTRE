@@ -1,4 +1,6 @@
 locals {
+  core_key_vault_name = var.kv_name_override != "" ? var.kv_name_override : "kv-${var.tre_id}"
+
   core_vnet                       = "vnet-${var.tre_id}"
   core_resource_group_name        = "rg-${var.tre_id}"
   nexus_allowed_fqdns             = "pypi.org,*.pypi.org,files.pythonhosted.org,security.ubuntu.com,archive.ubuntu.com,keyserver.ubuntu.com,repo.anaconda.com,*.docker.com,*.docker.io,conda.anaconda.org,azure.archive.ubuntu.com,packages.microsoft.com,repo.almalinux.org,download-ib01.fedoraproject.org,cran.r-project.org,cloud.r-project.org,download1.rstudio.org,*.snapcraftcontent.com,download.microsoft.com,marketplace.visualstudio.com"

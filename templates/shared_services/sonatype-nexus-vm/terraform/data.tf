@@ -10,7 +10,7 @@ data "azurerm_subnet" "shared" {
 }
 
 data "azurerm_key_vault" "kv" {
-  name                = "kv-${var.tre_id}"
+  name                = local.core_key_vault_name
   resource_group_name = local.core_resource_group_name
 }
 

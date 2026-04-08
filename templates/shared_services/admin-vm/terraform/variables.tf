@@ -3,6 +3,12 @@ variable "tre_id" {
   description = "Unique TRE ID"
 }
 
+variable "kv_name_override" {
+  type        = string
+  description = "Optional override for the core Key Vault name. Leave empty to use the default name kv-<tre_id>."
+  default     = ""
+}
+
 variable "tre_resource_id" {
   type        = string
   description = "Resource ID"

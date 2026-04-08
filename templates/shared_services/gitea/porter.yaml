@@ -1,7 +1,7 @@
 ---
 schemaVersion: 1.0.0
 name: tre-shared-service-gitea
-version: 1.2.1
+version: 1.2.2
 description: "A Gitea shared service"
 dockerfile: Dockerfile.tmpl
 registry: azuretre
@@ -54,6 +54,10 @@ parameters:
   - name: sql_sku
     type: string
     default: "B | 4GB 2vCores"
+  - name: kv_name_override
+    type: string
+    description: "Optional override for the core Key Vault name. Leave empty to use kv-<tre_id>."
+    default: ""
 
 mixins:
   - terraform:
@@ -93,6 +97,7 @@ install:
         acr_name: ${ bundle.parameters.mgmt_acr_name }
         arm_environment: ${ bundle.parameters.arm_environment }
         sql_sku: ${ bundle.parameters.sql_sku }
+        kv_name_override: ${ bundle.parameters.kv_name_override }
       backendConfig:
         use_azuread_auth: "true"
         use_oidc: "true"
@@ -116,6 +121,7 @@ upgrade:
         acr_name: ${ bundle.parameters.mgmt_acr_name }
         arm_environment: ${ bundle.parameters.arm_environment }
         sql_sku: ${ bundle.parameters.sql_sku }
+        kv_name_override: ${ bundle.parameters.kv_name_override }
       backendConfig:
         use_azuread_auth: "true"
         use_oidc: "true"
@@ -139,6 +145,7 @@ uninstall:
         acr_name: ${ bundle.parameters.mgmt_acr_name }
         arm_environment: ${ bundle.parameters.arm_environment }
         sql_sku: ${ bundle.parameters.sql_sku }
+        kv_name_override: ${ bundle.parameters.kv_name_override }
       backendConfig:
         use_azuread_auth: "true"
         use_oidc: "true"

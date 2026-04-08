@@ -51,6 +51,12 @@
       "source": {
         "env": "SQL_SKU"
       }
+    },
+    {
+      "name": "kv_name_override",
+      "source": {
+        "env": "KV_NAME_OVERRIDE"
+      }
     }
   ]
 }
