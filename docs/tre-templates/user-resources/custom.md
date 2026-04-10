@@ -20,10 +20,7 @@ In `porter.yaml`, the `custom` section contains a couple of sub-sections (shown 
 ```yaml
 custom:
   vm_sizes:
-    "2 CPU | 8GB RAM": Standard_D2s_v5
-    "4 CPU | 16GB RAM": Standard_D4s_v5
-    "8 CPU | 32GB RAM": Standard_D8s_v5
-    "16 CPU | 64GB RAM": Standard_D16s_v5
+    "2 CPU | 8GB RAM": Standard_D2ads_v7
   image_options:
     "Ubuntu 22.04 LTS":
       source_image_reference:
