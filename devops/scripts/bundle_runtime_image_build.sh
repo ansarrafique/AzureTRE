@@ -12,10 +12,16 @@ if [ "$(yq eval ".custom.runtime_image.import" porter.yaml)" != "null" ]; then
   version=$(yq eval ".custom.runtime_image.import.tag" porter.yaml)
 
   echo "Importing ${source_image}:${version} to ACR as ${image_name}:${version}..."
-  az acr import --name "${ACR_NAME}" \
-    --source "${source_image}:${version}" \
-    --image "${image_name}:${version}" \
+  import_args=(
+    --name "${ACR_NAME}"
+    --source "${source_image}:${version}"
+    --image "${image_name}:${version}"
     --force
+  )
+  if [ -n "${DOCKERHUB_USERNAME:-}" ] && [ -n "${DOCKERHUB_PASSWORD:-}" ]; then
+    import_args+=(--username "${DOCKERHUB_USERNAME}" --password "${DOCKERHUB_PASSWORD}")
+  fi
+  az acr import "${import_args[@]}"
   echo "Image imported successfully"
   exit 0
 fi
