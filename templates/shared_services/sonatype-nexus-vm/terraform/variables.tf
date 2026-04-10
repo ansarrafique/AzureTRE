@@ -23,7 +23,7 @@ variable "key_store_id" {
 variable "vm_size" {
   type        = string
   description = "The size of the VM to be deployed"
-  default     = "Standard_B2ms"
+  default     = "Standard_D2as_v7"
 }
 
 variable "mgmt_acr_name" {
