@@ -99,6 +99,7 @@ module "network" {
 }
 
 module "firewall" {
+  count                          = 0
   source                         = "./firewall"
   tre_id                         = var.tre_id
   firewall_sku                   = var.firewall_sku
@@ -218,7 +219,7 @@ module "resource_processor_vmss_porter" {
   auto_grant_workspace_consent                     = var.auto_grant_workspace_consent
   enable_airlock_malware_scanning                  = var.enable_airlock_malware_scanning
   airlock_malware_scan_result_topic_name           = module.airlock_resources.airlock_malware_scan_result_topic_name
-  firewall_policy_id                               = module.firewall.firewall_policy_id
+  firewall_policy_id                               = ""
 
   depends_on = [
     module.network,
