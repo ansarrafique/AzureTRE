@@ -19,7 +19,7 @@ terraform {
     }
     azapi = {
       source  = "Azure/azapi"
-      version = "= 2.8.0"
+      version = "= 2.10.0"
     }
     # tflint-ignore: terraform_unused_required_providers
     cloudinit = {
