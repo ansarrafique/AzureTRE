@@ -379,8 +379,9 @@ upgrade:
 uninstall:
   - exec:
       description: "Remove backup-related resources from Terraform state"
-      command: ./remove_backup_resources_from_state.sh
+      command: bash
       arguments:
+        - ./remove_backup_resources_from_state.sh
         - ${ bundle.parameters.tfstate_resource_group_name }
         - ${ bundle.parameters.tfstate_storage_account_name }
         - ${ bundle.parameters.tfstate_container_name }
