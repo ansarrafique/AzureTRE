@@ -196,10 +196,12 @@ vault="${self.input.vault_name}"
 rg="${self.input.resource_group_name}"
 container_name="StorageContainer;storage;${self.input.resource_group_name};${self.input.storage_account_name}"
 
-echo "Disabling soft delete on Recovery Services vault '$vault' so destroy can hard-delete protected items..."
-az backup vault backup-properties set \
+echo "Attempting to disable soft delete on Recovery Services vault '$vault'..."
+if ! az backup vault backup-properties set \
   --name "$vault" --resource-group "$rg" \
-  --soft-delete-feature-state Disable --output none
+  --soft-delete-feature-state Disable --output none; then
+  echo "Soft delete could not be disabled; continuing with backup cleanup."
+fi
 
 for attempt in 1 2 3 4 5 6; do
   state=$(az backup vault backup-properties show \
