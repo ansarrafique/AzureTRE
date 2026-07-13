@@ -1,7 +1,7 @@
 ---
 schemaVersion: 1.0.0
 name: tre-workspace-base
-version: 2.8.3
+version: 2.8.4
 description: "A base Azure TRE workspace"
 dockerfile: Dockerfile.tmpl
 registry: azuretre
@@ -378,15 +378,17 @@ upgrade:
 
 uninstall:
   - exec:
-      description: "Remove backup-related resources from Terraform state"
+      description: "Unmanage Storage Account and Recovery Vault"
       command: bash
       arguments:
         - ./remove_backup_resources_from_state.sh
-        - ${ bundle.parameters.tfstate_resource_group_name }
-        - ${ bundle.parameters.tfstate_storage_account_name }
-        - ${ bundle.parameters.tfstate_container_name }
-        - ${ bundle.parameters.tre_id }
-        - ${ bundle.parameters.id }
+      flags:
+        backup_enabled: "${ bundle.parameters.enable_backup }"
+        use_azuread_auth: true
+        resource_group_name: "${ bundle.parameters.tfstate_resource_group_name }"
+        storage_account_name: "${ bundle.parameters.tfstate_storage_account_name }"
+        container_name: "${ bundle.parameters.tfstate_container_name }"
+        key: "${ bundle.parameters.tre_id }-ws-${ bundle.parameters.id }"
   - terraform:
       description: "Tear down workspace"
       vars:
