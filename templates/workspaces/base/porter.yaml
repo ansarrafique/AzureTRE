@@ -1,7 +1,7 @@
 ---
 schemaVersion: 1.0.0
 name: tre-workspace-base
-version: 2.8.1
+version: 2.8.2
 description: "A base Azure TRE workspace"
 dockerfile: Dockerfile.tmpl
 registry: azuretre
@@ -377,6 +377,15 @@ upgrade:
         register-aad-application: "${ bundle.parameters.register_aad_application }"
 
 uninstall:
+  - exec:
+      description: "Remove backup-related resources from Terraform state"
+      command: ./remove_backup_resources_from_state.sh
+      arguments:
+        - ${ bundle.parameters.tfstate_resource_group_name }
+        - ${ bundle.parameters.tfstate_storage_account_name }
+        - ${ bundle.parameters.tfstate_container_name }
+        - ${ bundle.parameters.tre_id }
+        - ${ bundle.parameters.id }
   - terraform:
       description: "Tear down workspace"
       vars:
