@@ -8,15 +8,16 @@ set -o pipefail
 
 function usage() {
     cat <<USAGE
-Usage: $0 --backup_enabled true|false --use_azuread_auth true|false --resource_group_name rg_name --storage_account_name sa_name --container_name container --key backend_key
+Usage: $0 --backup_enabled true|false --use_azuread_auth true|false --resource_group_name rg_name --storage_account_name sa_name --container_name container --key backend_key --workspace_resource_group_name workspace_rg_name
 
 Options:
-    --backup_enabled         Whether backup is enabled (true|false)
-    --use_azuread_auth       Whether to use Azure AD auth (true|false)
-    --resource_group_name    Backend resource group name
-    --storage_account_name   Backend storage account name
-    --container_name         Terraform state container name
-    --key                    Backend key for terraform state
+    --backup_enabled                  Whether backup is enabled (true|false)
+    --use_azuread_auth                Whether to use Azure AD auth (true|false)
+    --resource_group_name             Backend resource group name
+    --storage_account_name            Backend storage account name
+    --container_name                  Terraform state container name
+    --key                             Backend key for terraform state
+    --workspace_resource_group_name   Workspace resource group name where management locks may exist
 USAGE
     exit 1
 }
@@ -31,6 +32,7 @@ backend_rg_name=""
 backend_storage_account_name=""
 terraform_state_container_name=""
 backend_key=""
+workspace_rg_name=""
 
 # Parse Porter flags.
 while [ "$#" -gt 0 ]; do
@@ -59,6 +61,10 @@ while [ "$#" -gt 0 ]; do
         backend_key="$2"
         shift 2
         ;;
+    --workspace_resource_group_name)
+        workspace_rg_name="$2"
+        shift 2
+        ;;
     *)
         echo "Unexpected argument: '$1'"
         usage
@@ -78,11 +84,41 @@ terraform init -input=false -backend=true -reconfigure \
     -backend-config="key=${backend_key}" \
     -backend-config="use_azuread_auth=${use_azuread_auth}"
 
+# Remove any management locks from the workspace resource group before destroy.
+# This must target the workspace RG, not the backend state RG.
+if [ -n "${workspace_rg_name}" ]; then
+    if command -v az >/dev/null 2>&1; then
+        echo "Checking for management locks in workspace resource group: ${workspace_rg_name}"
+
+        lock_ids="$(az lock list --resource-group "${workspace_rg_name}" --query "[].id" -o tsv 2>/dev/null || true)"
+
+        if [ -n "${lock_ids}" ]; then
+            echo "Deleting management locks..."
+            while IFS= read -r lock_id; do
+                if [ -n "${lock_id}" ]; then
+                    echo "Deleting lock: ${lock_id}"
+                    az lock delete --ids "${lock_id}" || true
+                fi
+            done <<EOF
+${lock_ids}
+EOF
+        else
+            echo "No management locks found in workspace resource group."
+        fi
+    else
+        echo "Azure CLI not found; skipping management lock removal."
+    fi
+else
+    echo "Workspace resource group name not provided; skipping management lock removal."
+fi
+
 # Read the current state once.
 state_list="$(terraform state list || true)"
 
 # Exact Terraform state addresses for resources we want to unmanage.
 # terraform state rm removes them from state only; it does NOT delete the Azure resources.
+# Private endpoints are intentionally NOT removed from state so Terraform can delete them
+# and detach them from the subnet during destroy.
 explicit_resources=(
     "azurerm_resource_group.ws"
     "azurerm_storage_account.stg"
@@ -90,9 +126,6 @@ explicit_resources=(
     "azurerm_storage_account_network_rules.stgrules"
     "azapi_resource.shared_storage"
     "azurerm_key_vault.kv"
-    "azurerm_private_endpoint.stgfilepe"
-    "azurerm_private_endpoint.stgblobpe"
-    "azurerm_private_endpoint.stgdfspe"
 )
 
 echo "Removing core workspace resources from Terraform state..."
@@ -104,18 +137,22 @@ for resource in "${explicit_resources[@]}"; do
     fi
 done
 
-# If backup is enabled, remove the whole backup module from state as well.
-# This leaves the backup-related Azure resources orphaned intentionally,
-# so Porter/Terraform can continue uninstalling the rest of the workspace.
+# If backup is enabled, remove all backup-related resources from state as well.
+# This matches any state address containing "backup" so the cleanup is resilient
+# to module path changes.
 if [[ "${backup_enabled}" == "true" ]]; then
-    echo "Removing backup module resources from Terraform state..."
+    echo "Removing backup-related resources from Terraform state..."
+
+    backup_resources="$(echo "$state_list" | grep -Ei 'backup' || true)"
 
     while IFS= read -r resource; do
         if [ -n "$resource" ]; then
             echo "Removing from state: $resource"
             terraform state rm "$resource" || true
         fi
-    done < <(echo "$state_list" | grep -E '^module\.backup' || true)
+    done <<EOF
+${backup_resources}
+EOF
 fi
 
 cd ..
